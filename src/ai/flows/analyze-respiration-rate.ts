@@ -56,7 +56,7 @@ const prompt = ai.definePrompt({
 
 You will receive patient data including age, gender, weight, past diseases, activity level, body posture, stress level, dehydration status, and respiration rate.
 
-Based on this information, you will analyze the respiration rate and provide personalized recommendations. Only provide generic medical advice; this is NOT intended as a diagnostic tool.
+Based on this information, you will analyze the respiration rate and provide personalized recommendations.
 
 Patient Data:
 Age: {{{age}}}

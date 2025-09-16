@@ -49,7 +49,7 @@ Stress Level: {{{stressLevel}}}
 Hydration Status: {{{hydrationStatus}}}
 Respiration Rate: {{{respirationRate}}} breaths per minute
 
-Provide specific and actionable advice tailored to the patient's profile, focusing on breathing exercises and stress reduction techniques. The advice should be general and NOT be interpreted as a medical diagnosis.
+Provide specific and actionable advice tailored to the patient's profile, focusing on breathing exercises and stress reduction techniques.
 
 Advice:`,
 });

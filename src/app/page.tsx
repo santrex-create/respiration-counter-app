@@ -128,9 +128,6 @@ export default function Home() {
           </motion.div>
         </AnimatePresence>
       </div>
-      <footer className="text-center mt-8 text-sm text-muted-foreground">
-        <p>This is not a diagnostic tool. Consult a healthcare professional for medical advice.</p>
-      </footer>
     </main>
   );
 }
