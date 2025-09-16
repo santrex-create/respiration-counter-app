@@ -45,7 +45,7 @@ export default function PatientInfoForm({ onNext, defaultValues }: PatientInfoFo
                 <FormItem>
                   <FormLabel>Age</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="e.g., 35" {...field} />
+                    <Input type="number" placeholder="e.g., 35" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -80,7 +80,7 @@ export default function PatientInfoForm({ onNext, defaultValues }: PatientInfoFo
                 <FormItem>
                   <FormLabel>Weight (kg)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="e.g., 70" {...field} />
+                    <Input type="number" placeholder="e.g., 70" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

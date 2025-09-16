@@ -36,6 +36,14 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
   const [isCounting, setIsCounting] = useState(false);
   const [timer, setTimer] = useState(60);
   const [tapCount, setTapCount] = useState(0);
+  const [tapSound, setTapSound] = useState<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // This will only run on the client
+    const audio = new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_c668156e33.mp3?filename=mouse-click-153941.mp3");
+    audio.preload = "auto";
+    setTapSound(audio);
+  }, []);
 
   const form = useForm<z.infer<typeof RateSchema>>({
     resolver: zodResolver(RateSchema),
@@ -54,6 +62,10 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
   };
   
   const handleTapCount = useCallback(() => {
+    if (tapSound) {
+      tapSound.currentTime = 0;
+      tapSound.play();
+    }
     if (!isCounting) {
       setIsCounting(true);
       setTapCount(1);
@@ -61,7 +73,7 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
     } else {
       setTapCount((prev) => prev + 1);
     }
-  }, [isCounting]);
+  }, [isCounting, tapSound]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -140,7 +152,7 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
                       <FormItem>
                         <FormLabel>Respiration Rate (breaths per minute)</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="e.g., 16" {...field} />
+                          <Input type="number" placeholder="e.g., 16" {...field} value={field.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
