@@ -4,7 +4,7 @@ import {
   ACTIVITY_LEVELS, 
   BODY_POSTURES, 
   STRESS_LEVELS, 
-  DEHYDRATION_STATUSES 
+  HYDRATION_STATUSES 
 } from "./constants";
 
 export const PatientInfoSchema = z.object({
@@ -18,7 +18,7 @@ export const ConditionsSchema = z.object({
   activityLevel: z.enum(ACTIVITY_LEVELS.map(o => o.id) as [string, ...string[]], { required_error: "Please select an activity level." }),
   bodyPosture: z.enum(BODY_POSTURES.map(o => o.id) as [string, ...string[]], { required_error: "Please select a body posture." }),
   stressLevel: z.enum(STRESS_LEVELS.map(o => o.id) as [string, ...string[]], { required_error: "Please select a stress level." }),
-  dehydrationStatus: z.enum(DEHYDRATION_STATUSES.map(o => o.id) as [string, ...string[]], { required_error: "Please select a dehydration status." }),
+  hydrationStatus: z.enum(HYDRATION_STATUSES.map(o => o.id) as [string, ...string[]], { required_error: "Please select a hydration status." }),
 });
 
 export const RateSchema = z.object({

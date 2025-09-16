@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ConditionsSchema, PatientData } from "@/lib/types";
-import { ACTIVITY_LEVELS, BODY_POSTURES, STRESS_LEVELS, DEHYDRATION_STATUSES } from "@/lib/constants";
+import { ACTIVITY_LEVELS, BODY_POSTURES, STRESS_LEVELS, HYDRATION_STATUSES } from "@/lib/constants";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,7 +53,7 @@ export default function ConditionsChecklist({ onNext, onBack, defaultValues }: C
       activityLevel: defaultValues?.activityLevel,
       bodyPosture: defaultValues?.bodyPosture,
       stressLevel: defaultValues?.stressLevel,
-      dehydrationStatus: defaultValues?.dehydrationStatus,
+      hydrationStatus: defaultValues?.hydrationStatus,
     },
   });
 
@@ -69,7 +69,7 @@ export default function ConditionsChecklist({ onNext, onBack, defaultValues }: C
             <FormRadioGroup name="activityLevel" control={form.control} label="Activity Level" options={ACTIVITY_LEVELS} />
             <FormRadioGroup name="bodyPosture" control={form.control} label="Body Posture" options={BODY_POSTURES} />
             <FormRadioGroup name="stressLevel" control={form.control} label="Stress Level" options={STRESS_LEVELS} />
-            <FormRadioGroup name="dehydrationStatus" control={form.control} label="Dehydration Status" options={DEHYDRATION_STATUSES} />
+            <FormRadioGroup name="hydrationStatus" control={form.control} label="Hydration Status" options={HYDRATION_STATUSES} />
           </CardContent>
           <CardFooter className="flex justify-between gap-4">
             <Button type="button" variant="outline" onClick={onBack} className="w-full">Back</Button>

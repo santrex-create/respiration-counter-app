@@ -21,7 +21,7 @@ export const STRESS_LEVELS = [
     { id: "very_high", label: "Very High" },
 ];
 
-export const DEHYDRATION_STATUSES = [
+export const HYDRATION_STATUSES = [
     { id: "well_hydrated", label: "Well-Hydrated" },
     { id: "mildly_dehydrated", label: "Mildly Dehydrated" },
     { id: "dehydrated", label: "Dehydrated" },
