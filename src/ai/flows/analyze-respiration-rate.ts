@@ -65,7 +65,7 @@ The values in brackets should be replaced with the patient's data and the analys
     *   **Status**: Compare the measured RR to the age-based reference range to determine if it's "Normal", "Low (Bradypnea)", or "High (Tachypnea)".
     *   **Rationale**: Briefly explain why the status was assigned, considering the RR, reference range, and context (like activity level).
 4.  **Context Notes**: Provide notes on how gender and weight can influence RR interpretation.
-5.  **Actions and Suggestions**: Based on the interpretation status (Low, High, or Normal), provide the corresponding actions.
+5.  **Actions and Suggestions**: Based on the interpretation status (Low, High, or Normal), provide the corresponding actions. This part should be the value for the 'recommendations' output field.
 6.  **Report Summary**:
     *   **Final Status**: State the final interpretation (e.g., "Normal", "High").
     *   **Recommendation**: Provide a clear next step (e.g., "Recheck at rest", "Clinical evaluation advised").
@@ -79,7 +79,7 @@ The values in brackets should be replaced with the patient's data and the analys
 - Activity Level: {{{activityLevel}}}
 - Body Posture: {{{bodyPosture}}}
 - Stress Level: {{{stressLevel}}}
-- Dehydration Status: {{{hydrationStatus}}}
+- Hydration Status: {{{hydrationStatus}}}
 - Respiration Rate: {{{respirationRate}}} breaths per minute
 
 ---
@@ -119,7 +119,7 @@ The values in brackets should be replaced with the patient's data and the analys
 
 ---
 
-Now, based on the provided patient data, generate the full report. The 'analysis' field should contain the entire formatted text report from "**Respiration Rate Report**" onwards. The 'recommendations' field should contain just the 'Recommendation' line from the 'Report Summary'.
+Now, based on the provided patient data, generate the full report. The 'analysis' field should contain the entire formatted text report from "**Respiration Rate Report**" up to and including "**Report Summary**". The 'recommendations' field should only contain the text from the "**Actions and Suggestions**" section that is relevant to the patient's status.
 `,
 });
 
