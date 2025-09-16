@@ -104,7 +104,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 md:p-8 bg-background">
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 md:p-8 bg-background selection:bg-primary selection:text-primary-foreground">
       <div className="w-full max-w-md mx-auto">
         <header className="text-center mb-8">
           <Logo />
