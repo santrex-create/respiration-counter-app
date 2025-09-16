@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'BreatheEasy Monitor',
+  title: 'Respiration Rate Monitor',
   description: 'Monitor your respiration rate and get smart wellbeing advice.',
 };
 
