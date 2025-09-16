@@ -25,7 +25,7 @@ const AnalyzeRespirationRateInputSchema = z.object({
   activityLevel: z.string().describe('The activity level of the patient.'),
   bodyPosture: z.string().describe('The body posture of the patient.'),
   stressLevel: z.string().describe('The stress level of the patient.'),
-  dehydrationStatus: z.string().describe('The dehydration status of the patient.'),
+  hydrationStatus: z.string().describe('The dehydration status of the patient.'),
   respirationRate: z.number().describe('The respiration rate of the patient.'),
 });
 export type AnalyzeRespirationRateInput = z.infer<
@@ -79,7 +79,7 @@ The values in brackets should be replaced with the patient's data and the analys
 - Activity Level: {{{activityLevel}}}
 - Body Posture: {{{bodyPosture}}}
 - Stress Level: {{{stressLevel}}}
-- Dehydration Status: {{{dehydrationStatus}}}
+- Dehydration Status: {{{hydrationStatus}}}
 - Respiration Rate: {{{respirationRate}}} breaths per minute
 
 ---
@@ -104,7 +104,7 @@ The values in brackets should be replaced with the patient's data and the analys
 **Context Notes**
 - **Gender**: Adult females may present near the upper end of normal without pathology.
 - **Weight**: Higher body mass may mildly elevate resting RR; corroborate with symptoms and oxygen saturation if available.
-- **Hydration**: {{{dehydrationStatus}}} status can influence the rate.
+- **Hydration**: {{{hydrationStatus}}} status can influence the rate.
 - **Stress**: A {{{stressLevel}}} stress level can elevate the rate.
 
 **Actions and Suggestions**
@@ -115,7 +115,7 @@ The values in brackets should be replaced with the patient's data and the analys
 **Report Summary**
 - **Final Status**: [Normal / Low / High / Context-elevated]
 - **Recommendation**: [Recheck at rest / Hydration and relaxation then recheck / Clinical evaluation advised]
-- **Notes**: Consider the patient's state: Activity level was {{{activityLevel}}}, stress was {{{stressLevel}}}, and hydration was {{{dehydrationStatus}}}. Past diseases: {{{pastDisease}}}.
+- **Notes**: Consider the patient's state: Activity level was {{{activityLevel}}}, stress was {{{stressLevel}}}, and hydration was {{{hydrationStatus}}}. Past diseases: {{{pastDisease}}}.
 
 ---
 
