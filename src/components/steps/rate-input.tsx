@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -6,10 +7,20 @@ import { z } from "zod";
 import { RateSchema, PatientData } from "@/lib/types";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2, Zap, Hand } from "lucide-react";
+import { Loader2, Zap, Hand, Wifi, Bluetooth } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { CircularProgress } from "@/components/ui/circular-progress";
 
@@ -118,14 +129,38 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
                  <Button type="button" variant="outline" className="w-full" onClick={handleTapCount} disabled={isConnecting}>
                     <Hand /> Tap to Count
                 </Button>
-                 <Button type="button" variant="secondary" className="w-full" onClick={handleConnectSensor} disabled={isConnecting}>
-                  {isConnecting ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <Zap />
-                  )}
-                  {isConnecting ? "Connecting..." : "Connect to Respiration Sensor"}
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button type="button" variant="secondary" className="w-full" disabled={isConnecting}>
+                      {isConnecting ? (
+                        <Loader2 className="animate-spin" />
+                      ) : (
+                        <Zap />
+                      )}
+                      {isConnecting ? "Connecting..." : "Connect to Respiration Sensor"}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Connect Sensor</DialogTitle>
+                      <DialogDescription>
+                        Choose your connection method to sync the respiration sensor.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <DialogClose asChild>
+                        <Button variant="outline" onClick={handleConnectSensor}>
+                          <Wifi className="mr-2" /> Connect with WiFi
+                        </Button>
+                      </DialogClose>
+                      <DialogClose asChild>
+                         <Button variant="outline" onClick={handleConnectSensor}>
+                          <Bluetooth className="mr-2" /> Connect with Bluetooth
+                        </Button>
+                      </DialogClose>
+                    </div>
+                  </DialogContent>
+                </Dialog>
              </>
             )}
 
