@@ -1,7 +1,7 @@
 "use client";
 
 import type { AnalysisResult, PatientData } from "@/lib/types";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell, ReferenceLine } from "recharts";
+import { LineChart, Line, CartesianGrid, ResponsiveContainer, XAxis, YAxis, Tooltip, ReferenceLine } from "recharts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -33,10 +33,17 @@ export default function ResultsDisplay({ result, patientData, onReset, onSave }:
   const rateStatus = useMemo(() => {
     if (rate < low) return { text: "Low", variant: "destructive" as const };
     if (rate > high) return { text: "High", variant: "destructive" as const };
-    return { text: "default" as const, "children": "Normal" };
+    return { text: "Normal" as const, variant: "default" as const };
   }, [rate, low, high]);
 
-  const chartData = [{ name: 'Your Rate', value: rate }];
+  const chartData = [
+      { name: 'Start', value: rate },
+      { name: 'Your Rate', value: rate },
+      { name: 'End', value: rate },
+    ];
+
+
+  const chartColor = rateStatus.variant === 'destructive' ? 'hsl(var(--destructive))' : 'hsl(var(--accent))';
 
   return (
     <div className="space-y-6">
@@ -77,17 +84,35 @@ export default function ResultsDisplay({ result, patientData, onReset, onSave }:
                 </CardDescription>
                 <div className="h-40 w-full">
                     <ResponsiveContainer>
-                    <BarChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="name" tickLine={false} axisLine={false} />
-                        <YAxis allowDecimals={false} domain={[0, Math.max(rate, high) + 5]} />
-                        <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}/>
-                        <ReferenceLine y={low} label={{ value: 'Normal Low', position: 'insideTopLeft' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
-                        <ReferenceLine y={high} label={{ value: 'Normal High', position: 'insideTopLeft' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
-                        <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                            <Cell fill={rateStatus.variant === 'destructive' ? 'hsla(var(--destructive), 0.5)' : 'hsla(var(--accent), 0.8)'} />
-                        </Bar>
-                    </BarChart>
+                        <LineChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                            <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{fill: 'hsl(var(--muted-foreground))'}} />
+                            <YAxis allowDecimals={false} domain={[0, Math.max(rate, high) + 5]} tick={{fill: 'hsl(var(--muted-foreground))'}}/>
+                            <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}/>
+                            <ReferenceLine y={low} label={{ value: 'Normal Low', position: 'insideTopLeft', fill: 'hsl(var(--muted-foreground))' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
+                            <ReferenceLine y={high} label={{ value: 'Normal High', position: 'insideTopLeft', fill: 'hsl(var(--muted-foreground))' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
+                            <Line 
+                                type="monotone" 
+                                dataKey="value" 
+                                stroke={chartColor}
+                                strokeWidth={2}
+                                strokeDasharray="5 5"
+                                dot={{ r: 0 }}
+                                activeDot={{ r: 0 }}
+                            />
+                            <Line
+                                type="monotone"
+                                dataKey="value"
+                                stroke="transparent"
+                                activeDot={false}
+                                dot={(props) => {
+                                    if (props.index === 1) {
+                                        return <circle {...props} r={8} fill={chartColor} />;
+                                    }
+                                    return null;
+                                }}
+                            />
+                        </LineChart>
                     </ResponsiveContainer>
                 </div>
                 <p className="text-sm bg-muted/50 p-4 rounded-md prose prose-sm dark:prose-invert max-w-none">{result.analysis.analysis}</p>
