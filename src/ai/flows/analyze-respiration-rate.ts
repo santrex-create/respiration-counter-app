@@ -56,7 +56,17 @@ const prompt = ai.definePrompt({
 
 You will receive patient data including age, gender, weight, past diseases, activity level, body posture, stress level, dehydration status, and respiration rate.
 
-Based on this information, you will analyze the respiration rate and provide personalized recommendations.
+Based on this information, you will analyze the respiration rate and provide personalized recommendations in points.
+
+Use the following points to guide your analysis. Only variable data should change in the report.
+
+- Age: Respiratory rate decreases from infancy to adulthood; adults typically fall within 12–20 breaths/min at rest, so any age change shifts the normal reference band used for alerts.
+- Weight: Higher body mass can increase resting respiratory effort and push rates toward the upper end of normal, influencing whether a mild elevation is flagged as physiologic vs. abnormal.
+- Gender: Females tend to have slightly higher resting rates and smaller airway/lung volumes, so similar readings may be interpreted as more expected in females than males within normal bounds.
+- Hydration: Lower hydration can slow post-activity respiratory recovery and contribute to transient tachypnea; adequate hydration supports faster normalization after exertion.
+- Stress level: Increased stress or anxiety commonly elevates respiratory rate; normalization after relaxation suggests a stress-mediated change rather than pathology.
+- Posture: Upright or seated positions can yield slightly higher rates than supine; supine rest often facilitates quicker return to baseline after activity.
+
 
 Patient Data:
 Age: {{{age}}}

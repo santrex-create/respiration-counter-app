@@ -133,7 +133,7 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
           <CardFooter className="flex flex-col gap-4">
              <Button type="submit" className="w-full" disabled={isPending || isCounting}>
               {isPending && <Loader2 className="animate-spin" />}
-              {isPending ? "Analyzing..." : "Analyze"}
+              {isPending ? "Generating Report..." : "Get Report"}
             </Button>
             <Button type="button" variant="outline" onClick={onBack} className="w-full" disabled={isPending || isCounting}>Back</Button>
           </CardFooter>
