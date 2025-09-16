@@ -53,34 +53,74 @@ const prompt = ai.definePrompt({
   input: {schema: AnalyzeRespirationRateInputSchema},
   output: {schema: AnalyzeRespirationRateOutputSchema},
   prompt: `You are a healthcare expert specializing in respiration analysis.
+You will receive patient data and generate a structured "Respiration Rate Report".
+The report should follow the format and logic provided below.
+The values in brackets should be replaced with the patient's data and the analysis results.
 
-You will receive patient data including age, gender, weight, past diseases, activity level, body posture, stress level, dehydration status, and respiration rate.
+**Report Generation Logic:**
 
-Based on this information, you will analyze the respiration rate and provide personalized recommendations in points.
+1.  **Patient Data**: Fill in the patient's details from the input.
+2.  **Reference (Age-Based)**: Determine the correct reference range based on the patient's age.
+3.  **Interpretation**:
+    *   **Status**: Compare the measured RR to the age-based reference range to determine if it's "Normal", "Low (Bradypnea)", or "High (Tachypnea)".
+    *   **Rationale**: Briefly explain why the status was assigned, considering the RR, reference range, and context (like activity level).
+4.  **Context Notes**: Provide notes on how gender and weight can influence RR interpretation.
+5.  **Actions and Suggestions**: Based on the interpretation status (Low, High, or Normal), provide the corresponding actions.
+6.  **Report Summary**:
+    *   **Final Status**: State the final interpretation (e.g., "Normal", "High").
+    *   **Recommendation**: Provide a clear next step (e.g., "Recheck at rest", "Clinical evaluation advised").
+    *   **Notes**: Mention any relevant context like symptoms if provided, activity level, etc.
 
-Use the following points to guide your analysis. Only variable data should change in the report.
+**Patient Data:**
+- Age: {{{age}}}
+- Gender: {{{gender}}}
+- Weight: {{{weight}}} kg
+- Past Disease: {{{pastDisease}}}
+- Activity Level: {{{activityLevel}}}
+- Body Posture: {{{bodyPosture}}}
+- Stress Level: {{{stressLevel}}}
+- Dehydration Status: {{{dehydrationStatus}}}
+- Respiration Rate: {{{respirationRate}}} breaths per minute
 
-- Age: Respiratory rate decreases from infancy to adulthood; adults typically fall within 12–20 breaths/min at rest, so any age change shifts the normal reference band used for alerts.
-- Weight: Higher body mass can increase resting respiratory effort and push rates toward the upper end of normal, influencing whether a mild elevation is flagged as physiologic vs. abnormal.
-- Gender: Females tend to have slightly higher resting rates and smaller airway/lung volumes, so similar readings may be interpreted as more expected in females than males within normal bounds.
-- Hydration: Lower hydration can slow post-activity respiratory recovery and contribute to transient tachypnea; adequate hydration supports faster normalization after exertion.
-- Stress level: Increased stress or anxiety commonly elevates respiratory rate; normalization after relaxation suggests a stress-mediated change rather than pathology.
-- Posture: Upright or seated positions can yield slightly higher rates than supine; supine rest often facilitates quicker return to baseline after activity.
+---
 
+**Respiration Rate Report**
 
-Patient Data:
-Age: {{{age}}}
-Gender: {{{gender}}}
-Weight: {{{weight}}} kg
-Past Disease: {{{pastDisease}}}
-Activity Level: {{{activityLevel}}}
-Body Posture: {{{bodyPosture}}}
-Stress Level: {{{stressLevel}}}
-Dehydration Status: {{{dehydrationStatus}}}
-Respiration Rate: {{{respirationRate}}} breaths per minute
+**Patient**
+- Age: {{{age}}} years
+- Weight: {{{weight}}} kg
+- Gender: {{{gender}}}
 
-Analysis:
-Recommendations:`, // Ensure Handlebars syntax is used correctly
+**Measurement**
+- Respiratory Rate (RR): {{{respirationRate}}} breaths per minute
+- State: Based on {{{activityLevel}}}
+- Position: {{{bodyPosture}}}
+- Measurement Window: 60 seconds
+
+**Interpretation**
+- **Status**: [Based on the analysis of the user's RR compared to their age reference, determine if it is Normal, Low (Bradypnea), or High (Tachypnea)]
+- **Rationale**: [Explain the status. For example: "The measured rate of {{{respirationRate}}} breaths/min falls within the normal resting range of 12–20 for an adult."]
+
+**Context Notes**
+- **Gender**: Adult females may present near the upper end of normal without pathology.
+- **Weight**: Higher body mass may mildly elevate resting RR; corroborate with symptoms and oxygen saturation if available.
+- **Hydration**: {{{dehydrationStatus}}} status can influence the rate.
+- **Stress**: A {{{stressLevel}}} stress level can elevate the rate.
+
+**Actions and Suggestions**
+- **If RR is Normal**: Continue monitoring as needed.
+- **If RR is too low for age (Bradypnea)**: Re-measure after 2–3 minutes of complete rest in a comfortable position. Check for sedating medicines, alcohol, opioids, head injury, or neuromuscular symptoms. If adult RR remains <12 at rest or any concerning symptoms are present (confusion, bluish lips, low oxygen), seek urgent clinical evaluation.
+- **If RR is too high for age (Tachypnea)**: Sit or lie supine, relax, avoid talking, and recheck after 5 minutes of quiet breathing. Address reversible factors: recent exertion, stress/anxiety, fever, dehydration, or pain. If adult RR remains >20–24 at rest (or above pediatric range) or if symptoms exist (shortness of breath, chest pain, wheezing, low oxygen), seek clinical evaluation.
+
+**Report Summary**
+- **Final Status**: [Normal / Low / High / Context-elevated]
+- **Recommendation**: [Recheck at rest / Hydration and relaxation then recheck / Clinical evaluation advised]
+- **Notes**: Consider the patient's state: Activity level was {{{activityLevel}}}, stress was {{{stressLevel}}}, and hydration was {{{dehydrationStatus}}}. Past diseases: {{{pastDisease}}}.
+
+---
+
+Now, based on the provided patient data, generate the full report. The 'analysis' field should contain the entire formatted text report from "**Respiration Rate Report**" onwards. The 'recommendations' field should contain just the 'Recommendation' line from the 'Report Summary'.
+`,
 });
 
 const analyzeRespirationRateFlow = ai.defineFlow(
