@@ -20,7 +20,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        {children}
+        <div className="relative flex min-h-screen flex-col">
+          <div className="flex-grow">{children}</div>
+          <footer className="fixed bottom-4 right-4 text-xs text-muted-foreground">
+            Created by Omkar Gaikwad
+          </footer>
+        </div>
         <Toaster />
       </body>
     </html>
