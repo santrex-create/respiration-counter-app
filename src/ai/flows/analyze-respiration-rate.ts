@@ -25,7 +25,7 @@ const AnalyzeRespirationRateInputSchema = z.object({
   activityLevel: z.string().describe('The activity level of the patient.'),
   bodyPosture: z.string().describe('The body posture of the patient.'),
   stressLevel: z.string().describe('The stress level of the patient.'),
-  hydrationStatus: z.string().describe('The dehydration status of the patient.'),
+  hydrationStatus: z.string().describe('The hydration status of the patient.'),
   respirationRate: z.number().describe('The respiration rate of the patient.'),
 });
 export type AnalyzeRespirationRateInput = z.infer<
@@ -59,67 +59,41 @@ The values in brackets should be replaced with the patient's data and the analys
 
 **Report Generation Logic:**
 
-1.  **Patient Data**: Fill in the patient's details from the input.
+1.  **Patient Data**: Fill in the patient's details from the input in the specified order.
 2.  **Reference (Age-Based)**: Determine the correct reference range based on the patient's age.
 3.  **Interpretation**:
     *   **Status**: Compare the measured RR to the age-based reference range to determine if it's "Normal", "Low (Bradypnea)", or "High (Tachypnea)".
-    *   **Rationale**: Briefly explain why the status was assigned, considering the RR, reference range, and context (like activity level).
-4.  **Context Notes**: Provide notes on how gender and weight can influence RR interpretation.
-5.  **Actions and Suggestions**: Based on the interpretation status (Low, High, or Normal), provide the corresponding actions. This part should be the value for the 'recommendations' output field.
-6.  **Report Summary**:
-    *   **Final Status**: State the final interpretation (e.g., "Normal", "High").
-    *   **Recommendation**: Provide a clear next step (e.g., "Recheck at rest", "Clinical evaluation advised").
-    *   **Notes**: Mention any relevant context like symptoms if provided, activity level, etc.
-
-**Patient Data:**
-- Age: {{{age}}}
-- Gender: {{{gender}}}
-- Weight: {{{weight}}} kg
-- Past Disease: {{{pastDisease}}}
-- Activity Level: {{{activityLevel}}}
-- Body Posture: {{{bodyPosture}}}
-- Stress Level: {{{stressLevel}}}
-- Hydration Status: {{{hydrationStatus}}}
-- Respiration Rate: {{{respirationRate}}} breaths per minute
-
----
+    *   **Rationale**: Briefly explain why the status was assigned.
+4.  **Actions and Suggestions**: Based on the interpretation status (Low, High, or Normal), provide the corresponding actions. This part should be the value for the 'recommendations' output field.
 
 **Respiration Rate Report**
 
-**Patient**
+**Patient Details & Measurement**
+- Respiration Rate: {{{respirationRate}}} breaths per minute
 - Age: {{{age}}} years
 - Weight: {{{weight}}} kg
 - Gender: {{{gender}}}
+- Sitting Position: {{{bodyPosture}}}
+- Hydration Status: {{{hydrationStatus}}}
+- Stress Level: {{{stressLevel}}}
+- Past Diseases: {{{pastDisease}}}
 
-**Measurement**
-- Respiratory Rate (RR): {{{respirationRate}}} breaths per minute
-- State: Based on {{{activityLevel}}}
-- Position: {{{bodyPosture}}}
-- Measurement Window: 60 seconds
+---
 
 **Interpretation**
 - **Status**: [Based on the analysis of the user's RR compared to their age reference, determine if it is Normal, Low (Bradypnea), or High (Tachypnea)]
 - **Rationale**: [Explain the status. For example: "The measured rate of {{{respirationRate}}} breaths/min falls within the normal resting range of 12–20 for an adult."]
 
-**Context Notes**
-- **Gender**: Adult females may present near the upper end of normal without pathology.
-- **Weight**: Higher body mass may mildly elevate resting RR; corroborate with symptoms and oxygen saturation if available.
-- **Hydration**: {{{hydrationStatus}}} status can influence the rate.
-- **Stress**: A {{{stressLevel}}} stress level can elevate the rate.
+---
 
 **Actions and Suggestions**
-- **If RR is Normal**: Continue monitoring as needed.
-- **If RR is too low for age (Bradypnea)**: Re-measure after 2–3 minutes of complete rest in a comfortable position. Check for sedating medicines, alcohol, opioids, head injury, or neuromuscular symptoms. If adult RR remains <12 at rest or any concerning symptoms are present (confusion, bluish lips, low oxygen), seek urgent clinical evaluation.
-- **If RR is too high for age (Tachypnea)**: Sit or lie supine, relax, avoid talking, and recheck after 5 minutes of quiet breathing. Address reversible factors: recent exertion, stress/anxiety, fever, dehydration, or pain. If adult RR remains >20–24 at rest (or above pediatric range) or if symptoms exist (shortness of breath, chest pain, wheezing, low oxygen), seek clinical evaluation.
-
-**Report Summary**
-- **Final Status**: [Normal / Low / High / Context-elevated]
-- **Recommendation**: [Recheck at rest / Hydration and relaxation then recheck / Clinical evaluation advised]
-- **Notes**: Consider the patient's state: Activity level was {{{activityLevel}}}, stress was {{{stressLevel}}}, and hydration was {{{hydrationStatus}}}. Past diseases: {{{pastDisease}}}.
+- **If RR is Normal**: Your respiration rate appears to be in the normal range for your age. Continue monitoring as needed.
+- **If RR is too low for age (Bradypnea)**: Your respiration rate is lower than the typical range. Re-measure after 2–3 minutes of complete rest. If it remains low or you feel unwell, consider seeking clinical evaluation.
+- **If RR is too high for age (Tachypnea)**: Your respiration rate is higher than the typical range. Try to relax and re-check after 5 minutes of quiet breathing. If it remains high or you have symptoms like shortness of breath, clinical evaluation is advised.
 
 ---
 
-Now, based on the provided patient data, generate the full report. The 'analysis' field should contain the entire formatted text report from "**Respiration Rate Report**" up to and including "**Report Summary**". The 'recommendations' field should only contain the text from the "**Actions and Suggestions**" section that is relevant to the patient's status.
+Now, based on the provided patient data, generate the full report. The 'analysis' field should contain the entire formatted text report from "**Respiration Rate Report**" up to and including "**Interpretation**". The 'recommendations' field should only contain the text from the "**Actions and Suggestions**" section that is relevant to the patient's status.
 `,
 });
 
