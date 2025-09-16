@@ -85,7 +85,7 @@ export default function ResultsDisplay({ result, patientData, onReset, onSave }:
                         <ReferenceLine y={low} label={{ value: 'Normal Low', position: 'insideTopLeft' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
                         <ReferenceLine y={high} label={{ value: 'Normal High', position: 'insideTopLeft' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
                         <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                            <Cell fill={rateStatus.variant === 'destructive' ? 'hsl(var(--destructive))' : 'hsl(var(--foreground))'} />
+                            <Cell fill={rateStatus.variant === 'destructive' ? 'hsla(var(--destructive), 0.5)' : 'hsla(var(--accent), 0.8)'} />
                         </Bar>
                     </BarChart>
                     </ResponsiveContainer>
