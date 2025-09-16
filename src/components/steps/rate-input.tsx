@@ -20,7 +20,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Loader2, Zap, Hand, Wifi, Bluetooth } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -31,7 +31,9 @@ type RateInputProps = {
   isPending: boolean;
 };
 
-export default function RateInput({ onAnalyze, onBack, defaultValues, isPending }: RateInputProps) {
+const MemoizedCircularProgress = memo(CircularProgress);
+
+function RateInput({ onAnalyze, onBack, defaultValues, isPending }: RateInputProps) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isCounting, setIsCounting] = useState(false);
   const [timer, setTimer] = useState(60);
@@ -39,7 +41,6 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
   const [tapSound, setTapSound] = useState<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // This will only run on the client
     const audio = new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_c668156e33.mp3?filename=mouse-click-153941.mp3");
     audio.preload = "auto";
     setTapSound(audio);
@@ -55,7 +56,7 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
   const handleConnectSensor = () => {
     setIsConnecting(true);
     setTimeout(() => {
-      const randomRate = Math.floor(Math.random() * (22 - 12 + 1)) + 12; // Random rate between 12 and 22
+      const randomRate = Math.floor(Math.random() * (22 - 12 + 1)) + 12;
       form.setValue("respirationRate", randomRate);
       setIsConnecting(false);
     }, 2000);
@@ -119,13 +120,13 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
                   className="space-y-4 text-center flex flex-col items-center"
                 >
-                  <CircularProgress progress={(timer / 60) * 100}>
+                  <MemoizedCircularProgress progress={(timer / 60) * 100}>
                       <span className="text-3xl font-bold">{timer}</span>
                       <span className="text-sm text-muted-foreground">seconds</span>
-                  </CircularProgress>
+                  </MemoizedCircularProgress>
                   <motion.div
                     whileTap={{ scale: 0.95 }}
                     className="w-full"
@@ -142,7 +143,7 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
                   className="space-y-4"
                 >
                   <FormField
@@ -209,3 +210,5 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
     </Card>
   );
 }
+
+export default memo(RateInput);
