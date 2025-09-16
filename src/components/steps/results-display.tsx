@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Lightbulb, Repeat, Save } from "lucide-react";
 import { useMemo } from "react";
+import Logo from "@/components/logo";
 
 type ResultsDisplayProps = {
   result: AnalysisResult;
@@ -39,55 +40,79 @@ export default function ResultsDisplay({ result, patientData, onReset, onSave }:
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Analysis Results</span>
-            <Badge variant={rateStatus.variant}>{rateStatus.text}</Badge>
-          </CardTitle>
-          <CardDescription>
-            Your respiration rate is {rate} breaths/min. The normal range for a(n) {status} is {low}-{high}.
-          </CardDescription>
+      <Card className="w-full max-w-2xl mx-auto shadow-2xl">
+        <CardHeader className="bg-muted/30 p-4 border-b">
+            <div className="flex flex-col items-center gap-2">
+                <Logo />
+                <p className="text-xs text-muted-foreground">Wellness & Respiration Report</p>
+            </div>
         </CardHeader>
-        <CardContent>
-          <div className="h-40 w-full">
-            <ResponsiveContainer>
-              <BarChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" tickLine={false} axisLine={false} />
-                <YAxis allowDecimals={false} domain={[0, Math.max(rate, high) + 5]} />
-                <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}/>
-                <ReferenceLine y={low} label={{ value: 'Normal Low', position: 'insideTopLeft' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
-                <ReferenceLine y={high} label={{ value: 'Normal High', position: 'insideTopLeft' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
-                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                    <Cell fill={rateStatus.variant === 'destructive' ? 'hsl(var(--destructive))' : 'hsl(var(--accent))'} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <p className="mt-4 text-sm">{result.analysis.analysis}</p>
-        </CardContent>
-      </Card>
+        <CardContent className="p-4 sm:p-6 space-y-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-sm">
+                <div>
+                    <p className="text-muted-foreground">Age</p>
+                    <p className="font-bold">{patientData.age}</p>
+                </div>
+                 <div>
+                    <p className="text-muted-foreground">Gender</p>
+                    <p className="font-bold">{patientData.gender}</p>
+                </div>
+                 <div>
+                    <p className="text-muted-foreground">Weight</p>
+                    <p className="font-bold">{patientData.weight} kg</p>
+                </div>
+                <div>
+                    <p className="text-muted-foreground">Rate</p>
+                    <p className="font-bold">{rate} <span className="text-xs font-normal">breaths/min</span></p>
+                </div>
+            </div>
+            <Separator />
+            <div className="space-y-4">
+                <CardTitle className="flex items-center justify-between text-lg">
+                    <span>Respiration Analysis</span>
+                    <Badge variant={rateStatus.variant}>{rateStatus.text}</Badge>
+                </CardTitle>
+                <CardDescription>
+                    Your rate of {rate} breaths/min is considered {rateStatus.text.toLowerCase()} for a(n) {status} (Normal: {low}-{high} breaths/min).
+                </CardDescription>
+                <div className="h-40 w-full">
+                    <ResponsiveContainer>
+                    <BarChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="name" tickLine={false} axisLine={false} />
+                        <YAxis allowDecimals={false} domain={[0, Math.max(rate, high) + 5]} />
+                        <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}/>
+                        <ReferenceLine y={low} label={{ value: 'Normal Low', position: 'insideTopLeft' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
+                        <ReferenceLine y={high} label={{ value: 'Normal High', position: 'insideTopLeft' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
+                        <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                            <Cell fill={rateStatus.variant === 'destructive' ? 'hsl(var(--destructive))' : 'hsl(var(--accent))'} />
+                        </Bar>
+                    </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                <p className="text-sm bg-gray-50 dark:bg-gray-900 p-3 rounded-md">{result.analysis.analysis}</p>
+            </div>
+            
+            <Separator />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Lightbulb className="text-accent" />
-            <span>Recommendations & Advice</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-           <div>
-            <h3 className="font-semibold mb-1">Personalized Recommendations</h3>
-            <p className="text-sm text-muted-foreground">{result.analysis.recommendations}</p>
-           </div>
-           <Separator/>
-           <div>
-            <h3 className="font-semibold mb-1">Wellbeing Tips</h3>
-            <p className="text-sm text-muted-foreground">{result.advice.advice}</p>
-           </div>
+            <div className="space-y-4">
+                 <CardTitle className="flex items-center gap-2 text-lg">
+                    <Lightbulb className="text-accent" />
+                    <span>Recommendations & Advice</span>
+                </CardTitle>
+                 <div className="space-y-3">
+                    <div>
+                        <h3 className="font-semibold mb-1 text-sm">Personalized Recommendations</h3>
+                        <p className="text-sm text-muted-foreground">{result.analysis.recommendations}</p>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold mb-1 text-sm">Wellbeing Tips</h3>
+                        <p className="text-sm text-muted-foreground">{result.advice.advice}</p>
+                    </div>
+                 </div>
+            </div>
         </CardContent>
-         <CardFooter className="flex flex-col sm:flex-row gap-2">
+        <CardFooter className="flex flex-col sm:flex-row gap-2 bg-muted/30 p-4 border-t">
             <Button onClick={onSave} variant="secondary" className="w-full"><Save/>Save Session</Button>
             <Button onClick={onReset} className="w-full"><Repeat/>New Session</Button>
         </CardFooter>
