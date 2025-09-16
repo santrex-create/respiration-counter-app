@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Loader2, Zap, Hand } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { Progress } from "@/components/ui/progress";
+import { CircularProgress } from "@/components/ui/circular-progress";
 
 type RateInputProps = {
   onAnalyze: (data: z.infer<typeof RateSchema>) => void;
@@ -90,12 +90,14 @@ export default function RateInput({ onAnalyze, onBack, defaultValues, isPending 
         <form onSubmit={form.handleSubmit(onAnalyze)}>
           <CardContent className="space-y-4">
              {isCounting ? (
-              <div className="space-y-3 text-center">
+              <div className="space-y-4 text-center flex flex-col items-center">
+                 <CircularProgress progress={(timer / 60) * 100}>
+                    <span className="text-3xl font-bold">{timer}</span>
+                    <span className="text-sm text-muted-foreground">seconds</span>
+                 </CircularProgress>
                  <Button type="button" variant="secondary" className="w-full h-24 text-2xl" onClick={handleTapCount}>
                     <Hand className="mr-2" /> Tap here ({tapCount})
                 </Button>
-                <Progress value={(timer / 60) * 100} className="w-full" />
-                <p className="text-sm text-muted-foreground">Time remaining: {timer}s</p>
                 <Button type="button" variant="ghost" size="sm" onClick={resetCounter}>Cancel</Button>
               </div>
             ) : (
