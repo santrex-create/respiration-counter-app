@@ -89,15 +89,15 @@ export default function Home() {
   const renderStep = () => {
     switch (step) {
       case "info":
-        return <PatientInfoForm onNext={handleNext} defaultValues={formData} />;
+        return <motion.div key="info" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><PatientInfoForm onNext={handleNext} defaultValues={formData} /></motion.div>;
       case "conditions":
-        return <ConditionsChecklist onNext={handleNext} onBack={handleBack} defaultValues={formData} />;
+        return <motion.div key="conditions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><ConditionsChecklist onNext={handleNext} onBack={handleBack} defaultValues={formData} /></motion.div>;
       case "rate":
-        return <RateInput onAnalyze={handleAnalysis} onBack={handleBack} defaultValues={formData} isPending={isPending} />;
+        return <motion.div key="rate" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><RateInput onAnalyze={handleAnalysis} onBack={handleBack} defaultValues={formData} isPending={isPending} /></motion.div>;
       case "results":
-        return analysisResult && <ResultsDisplay result={analysisResult} onReset={handleReset} onSave={handleSaveSession} patientData={formData as PatientData} />;
+        return analysisResult && <motion.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><ResultsDisplay result={analysisResult} onReset={handleReset} onSave={handleSaveSession} patientData={formData as PatientData} /></motion.div>;
       case "past-sessions":
-        return <PastSessions sessions={savedSessions} onBack={handleExitPastSessions} />;
+        return <motion.div key="past-sessions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><PastSessions sessions={savedSessions} onBack={handleExitPastSessions} /></motion.div>;
       default:
         return null;
     }
@@ -117,15 +117,7 @@ export default function Home() {
         )}
 
         <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-          >
-            {renderStep()}
-          </motion.div>
+          {renderStep()}
         </AnimatePresence>
       </div>
     </main>
