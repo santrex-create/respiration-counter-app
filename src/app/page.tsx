@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useTransition, useMemo } from "react";
+import { useState, useCallback, useTransition, useMemo, useEffect } from "react";
 import type { PatientData, SavedSession, AnalysisResult } from "@/lib/types";
 import { getAnalysis } from "@/lib/actions";
 import { v4 as uuidv4 } from "uuid";
@@ -18,11 +18,48 @@ import { Activity } from "lucide-react";
 
 type Step = "info" | "conditions" | "rate" | "results" | "past-sessions";
 
+// Mock data generator for demonstration
+const createMockSession = (daysAgo: number, age: number, rr: number): SavedSession => ({
+  id: uuidv4(),
+  patientData: {
+    age,
+    gender: "Male",
+    weight: 75,
+    activityLevel: "moderate",
+    bodyPosture: "sitting",
+    stressLevel: "low",
+    hydrationStatus: "well_hydrated",
+    respirationRate: rr,
+  },
+  analysisResult: {
+    analysis: {
+      analysis: `The respiration rate of ${rr} BPM is within the expected range for a subject of this age.`,
+      recommendations: "Maintain current hydration and activity levels.",
+      routine: "1. Morning stretch, 2. Daily walk, 3. Evening reflection.",
+    },
+    advice: {
+      advice: "Continue practicing deep breathing for optimal lung health.",
+    },
+  },
+  savedAt: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000),
+});
+
 export default function Home() {
   const [step, setStep] = useState<Step>("info");
   const [formData, setFormData] = useState<Partial<PatientData>>({});
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  
+  // Initialize with 3 mock sessions for demonstration
   const [savedSessions, setSavedSessions] = useState<SavedSession[]>([]);
+
+  useEffect(() => {
+    setSavedSessions([
+      createMockSession(3, 30, 16),
+      createMockSession(7, 30, 18),
+      createMockSession(14, 30, 15),
+    ]);
+  }, []);
+
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
@@ -79,7 +116,7 @@ export default function Home() {
         analysisResult: analysisResult,
         savedAt: new Date(),
       };
-      setSavedSessions((prev) => [...prev, newSession]);
+      setSavedSessions((prev) => [newSession, ...prev]);
       toast({
         title: "Session Committed",
         description: "The data has been archived in local storage.",
