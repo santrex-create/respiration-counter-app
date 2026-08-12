@@ -37,6 +37,7 @@ const AnalyzeRespirationRateOutputSchema = z.object({
   recommendations: z
     .string()
     .describe('Personalized recommendations based on the analysis.'),
+  routine: z.string().describe('Suggested daily routine adjustments (e.g. walk more, specific exercises).'),
 });
 export type AnalyzeRespirationRateOutput = z.infer<
   typeof AnalyzeRespirationRateOutputSchema
@@ -54,46 +55,20 @@ const prompt = ai.definePrompt({
   output: {schema: AnalyzeRespirationRateOutputSchema},
   prompt: `You are a healthcare expert specializing in respiration analysis.
 You will receive patient data and generate a structured "Respiration Rate Report".
-The report should follow the format and logic provided below.
-The values in brackets should be replaced with the patient's data and the analysis results.
 
 **Report Generation Logic:**
 
-1.  **Patient Data**: Fill in the patient's details from the input in the specified order.
-2.  **Reference (Age-Based)**: Determine the correct reference range based on the patient's age.
-3.  **Interpretation**:
-    *   **Status**: Compare the measured RR to the age-based reference range to determine if it's "Normal", "Low (Bradypnea)", or "High (Tachypnea)".
-    *   **Rationale**: Briefly explain why the status was assigned.
-4.  **Actions and Suggestions**: Based on the interpretation status (Low, High, or Normal), provide the corresponding actions. This part should be the value for the 'recommendations' output field.
+1.  **Patient Data**: Use the provided details: Age {{{age}}}, Weight {{{weight}}}kg, Gender {{{gender}}}, RR {{{respirationRate}}}bpm.
+2.  **Interpretation**:
+    *   Compare the measured RR to age-based reference ranges (Infants: 30-60, Toddlers: 24-40, Children: 18-30, Adults: 12-20).
+    *   Determine status: "Normal", "Low (Bradypnea)", or "High (Tachypnea)".
+3.  **Daily Routine Optimization**: Suggest specific lifestyle changes based on their profile. If they are sedentary, suggest walking. If stressed, suggest specific timed breaks.
+4.  **Recommendations**: Provide immediate clinical-style advice.
 
-**Respiration Rate Report**
-
-**Patient Details & Measurement**
-- Respiration Rate: {{{respirationRate}}} breaths per minute
-- Age: {{{age}}} years
-- Weight: {{{weight}}} kg
-- Gender: {{{gender}}}
-- Sitting Position: {{{bodyPosture}}}
-- Hydration Status: {{{hydrationStatus}}}
-- Stress Level: {{{stressLevel}}}
-- Past Diseases: {{{pastDisease}}}
-
----
-
-**Interpretation**
-- **Status**: [Based on the analysis of the user's RR compared to their age reference, determine if it is Normal, Low (Bradypnea), or High (Tachypnea)]
-- **Rationale**: [Explain the status. For example: "The measured rate of {{{respirationRate}}} breaths/min falls within the normal resting range of 12–20 for an adult."]
-
----
-
-**Actions and Suggestions**
-- **If RR is Normal**: Your respiration rate appears to be in the normal range for your age. Continue monitoring as needed.
-- **If RR is too low for age (Bradypnea)**: Your respiration rate is lower than the typical range. Re-measure after 2–3 minutes of complete rest. If it remains low or you feel unwell, consider seeking clinical evaluation.
-- **If RR is too high for age (Tachypnea)**: Your respiration rate is higher than the typical range. Try to relax and re-check after 5 minutes of quiet breathing. If it remains high or you have symptoms like shortness of breath, clinical evaluation is advised.
-
----
-
-Now, based on the provided patient data, generate the full report. The 'analysis' field should contain the entire formatted text report from "**Respiration Rate Report**" up to and including "**Interpretation**". The 'recommendations' field should only contain the text from the "**Actions and Suggestions**" section that is relevant to the patient's status.
+Format the output fields as follows:
+- 'analysis': A concise summary of the status and rationale.
+- 'recommendations': Specific immediate actions (e.g., "Re-measure in 5 mins").
+- 'routine': A 3-step daily routine plan to optimize their respiratory health (e.g. "1. Morning 15-min walk, 2. Afternoon hydration check, 3. Evening breathing exercises").
 `,
 });
 

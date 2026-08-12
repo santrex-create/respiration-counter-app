@@ -33,6 +33,7 @@ export type AnalysisResult = {
   analysis: {
     analysis: string;
     recommendations: string;
+    routine: string;
   };
   advice: {
     advice: string;
