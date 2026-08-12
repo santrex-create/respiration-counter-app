@@ -1,11 +1,14 @@
-import { HeartPulse } from 'lucide-react';
+import { Activity } from 'lucide-react';
 
 const Logo = () => {
   return (
-    <div className="flex items-center justify-center gap-3">
-      <HeartPulse className="w-10 h-10 text-accent" style={{ filter: 'drop-shadow(0 0 6px hsl(var(--accent) / 0.7))' }} />
-      <h1 className="text-4xl font-bold text-foreground tracking-tight">
-        Respiration Rate <span className="font-light">Monitor</span>
+    <div className="flex flex-col items-center justify-center gap-1 group">
+      <div className="relative">
+        <Activity className="w-12 h-12 text-accent animate-pulse" style={{ filter: 'drop-shadow(0 0 8px hsl(var(--accent) / 0.8))' }} />
+        <div className="absolute inset-0 border border-accent/20 rounded-full animate-ping [animation-duration:3s]" />
+      </div>
+      <h1 className="text-2xl font-mono font-bold text-foreground tracking-tighter uppercase">
+        Vital<span className="text-accent">Scan</span> <span className="text-[10px] text-muted-foreground opacity-50">v2.5</span>
       </h1>
     </div>
   );

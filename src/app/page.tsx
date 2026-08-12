@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useTransition } from "react";
+import { useState, useCallback, useTransition, useMemo } from "react";
 import type { PatientData, SavedSession, AnalysisResult } from "@/lib/types";
 import { getAnalysis } from "@/lib/actions";
 import { v4 as uuidv4 } from "uuid";
@@ -27,15 +27,21 @@ export default function Home() {
 
   const handleNext = useCallback((data: Partial<PatientData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
-    if (step === "info") setStep("conditions");
-    if (step === "conditions") setStep("rate");
-  }, [step]);
+    setStep((prev) => {
+      if (prev === "info") return "conditions";
+      if (prev === "conditions") return "rate";
+      return prev;
+    });
+  }, []);
 
   const handleBack = useCallback(() => {
-    if (step === "conditions") setStep("info");
-    if (step === "rate") setStep("conditions");
-    if (step === "results") setStep("rate");
-  }, [step]);
+    setStep((prev) => {
+      if (prev === "conditions") return "info";
+      if (prev === "rate") return "conditions";
+      if (prev === "results") return "rate";
+      return prev;
+    });
+  }, []);
 
   const handleAnalysis = useCallback((data: Partial<PatientData>) => {
     const completeData = { ...formData, ...data } as PatientData;
@@ -49,20 +55,20 @@ export default function Home() {
       } else {
         toast({
           variant: "destructive",
-          title: "Analysis Failed",
-          description: result.error || "An unknown error occurred.",
+          title: "Scan Interrupted",
+          description: result.error || "A critical error occurred in the analysis core.",
         });
       }
     });
   }, [formData, toast]);
   
-  const handleViewPastSessions = () => {
+  const handleViewPastSessions = useCallback(() => {
     setStep("past-sessions");
-  };
+  }, []);
 
-  const handleExitPastSessions = () => {
+  const handleExitPastSessions = useCallback(() => {
     setStep("info");
-  }
+  }, []);
 
   const handleSaveSession = useCallback(() => {
     if (formData && analysisResult) {
@@ -74,8 +80,8 @@ export default function Home() {
       };
       setSavedSessions((prev) => [...prev, newSession]);
       toast({
-        title: "Session Saved",
-        description: "The current session has been saved.",
+        title: "Session Committed",
+        description: "The data has been archived in local storage.",
       });
     }
   }, [formData, analysisResult, toast]);
@@ -86,38 +92,47 @@ export default function Home() {
     setAnalysisResult(null);
   }, []);
 
-  const renderStep = () => {
+  const currentStepView = useMemo(() => {
+    const variants = {
+      initial: { opacity: 0, x: 10, filter: "blur(4px)" },
+      animate: { opacity: 1, x: 0, filter: "blur(0px)" },
+      exit: { opacity: 0, x: -10, filter: "blur(4px)" }
+    };
+
     switch (step) {
       case "info":
-        return <motion.div key="info" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><PatientInfoForm onNext={handleNext} defaultValues={formData} /></motion.div>;
+        return <motion.div key="info" {...variants} transition={{ duration: 0.4 }}><PatientInfoForm onNext={handleNext} defaultValues={formData} /></motion.div>;
       case "conditions":
-        return <motion.div key="conditions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><ConditionsChecklist onNext={handleNext} onBack={handleBack} defaultValues={formData} /></motion.div>;
+        return <motion.div key="conditions" {...variants} transition={{ duration: 0.4 }}><ConditionsChecklist onNext={handleNext} onBack={handleBack} defaultValues={formData} /></motion.div>;
       case "rate":
-        return <motion.div key="rate" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><RateInput onAnalyze={handleAnalysis} onBack={handleBack} defaultValues={formData} isPending={isPending} /></motion.div>;
+        return <motion.div key="rate" {...variants} transition={{ duration: 0.4 }}><RateInput onAnalyze={handleAnalysis} onBack={handleBack} defaultValues={formData} isPending={isPending} /></motion.div>;
       case "results":
-        return analysisResult && <motion.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><ResultsDisplay result={analysisResult} onReset={handleReset} onSave={handleSaveSession} patientData={formData as PatientData} /></motion.div>;
+        return analysisResult && <motion.div key="results" {...variants} transition={{ duration: 0.4 }}><ResultsDisplay result={analysisResult} onReset={handleReset} onSave={handleSaveSession} patientData={formData as PatientData} /></motion.div>;
       case "past-sessions":
-        return <motion.div key="past-sessions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3, ease: 'easeInOut' }}><PastSessions sessions={savedSessions} onBack={handleExitPastSessions} /></motion.div>;
+        return <motion.div key="past-sessions" {...variants} transition={{ duration: 0.4 }}><PastSessions sessions={savedSessions} onBack={handleExitPastSessions} /></motion.div>;
       default:
         return null;
     }
-  };
+  }, [step, formData, handleNext, handleBack, handleAnalysis, isPending, analysisResult, handleReset, handleSaveSession, handleExitPastSessions, savedSessions]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 md:p-8 bg-background selection:bg-primary selection:text-primary-foreground">
-      <div className="w-full max-w-md mx-auto">
-        <header className="text-center mb-8">
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 md:p-8 bg-[#020817] text-slate-200 selection:bg-accent selection:text-accent-foreground">
+      <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/tech/1920/1080')] opacity-[0.03] grayscale pointer-events-none" />
+      <div className="w-full max-w-md mx-auto relative z-10">
+        <header className="text-center mb-12">
           <Logo />
         </header>
         
         {step === 'info' && savedSessions.length > 0 && (
           <div className="text-center mb-6">
-            <Button variant="outline" onClick={handleViewPastSessions}>View Past Sessions</Button>
+            <Button variant="outline" onClick={handleViewPastSessions} className="border-accent/30 text-accent hover:bg-accent/10 font-mono text-[10px] uppercase">
+              Access Archives
+            </Button>
           </div>
         )}
 
         <AnimatePresence mode="wait">
-          {renderStep()}
+          {currentStepView}
         </AnimatePresence>
       </div>
     </main>

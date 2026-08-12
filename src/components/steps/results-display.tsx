@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Lightbulb, Repeat, Save } from "lucide-react";
+import { Lightbulb, Repeat, Save, Activity, Zap } from "lucide-react";
 import { useMemo } from "react";
 import Logo from "@/components/logo";
 
@@ -47,67 +47,102 @@ export default function ResultsDisplay({ result, patientData, onReset, onSave }:
 
   return (
     <div className="space-y-6">
-      <Card className="w-full max-w-2xl mx-auto shadow-2xl overflow-hidden">
-        <CardHeader className="bg-muted/30 p-4 border-b">
+      <Card className="w-full max-w-2xl mx-auto shadow-2xl overflow-hidden border-accent/20">
+        <CardHeader className="bg-muted/30 p-4 border-b border-accent/10">
             <div className="flex flex-col items-center gap-2">
                 <Logo />
-                <p className="text-xs text-muted-foreground tracking-widest uppercase">Wellness & Respiration Report</p>
+                <div className="flex items-center gap-2">
+                    <Zap className="w-3 h-3 text-accent animate-pulse" />
+                    <p className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase font-mono">System Analysis Active</p>
+                </div>
             </div>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-sm">
-                <div>
-                    <p className="text-muted-foreground">Age</p>
-                    <p className="font-bold text-lg">{patientData.age}</p>
+        <CardContent className="p-4 sm:p-6 space-y-6 text-slate-200">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                <div className="p-2 rounded-lg bg-accent/5 border border-accent/10">
+                    <p className="text-[10px] text-muted-foreground uppercase font-mono mb-1">Age</p>
+                    <p className="font-bold text-xl font-mono text-accent">{patientData.age}</p>
                 </div>
-                 <div>
-                    <p className="text-muted-foreground">Gender</p>
-                    <p className="font-bold text-lg">{patientData.gender}</p>
+                 <div className="p-2 rounded-lg bg-accent/5 border border-accent/10">
+                    <p className="text-[10px] text-muted-foreground uppercase font-mono mb-1">Gender</p>
+                    <p className="font-bold text-xl font-mono text-accent">{patientData.gender}</p>
                 </div>
-                 <div>
-                    <p className="text-muted-foreground">Weight</p>
-                    <p className="font-bold text-lg">{patientData.weight} kg</p>
+                 <div className="p-2 rounded-lg bg-accent/5 border border-accent/10">
+                    <p className="text-[10px] text-muted-foreground uppercase font-mono mb-1">Weight</p>
+                    <p className="font-bold text-xl font-mono text-accent">{patientData.weight} <span className="text-[10px]">KG</span></p>
                 </div>
-                <div>
-                    <p className="text-muted-foreground">Rate</p>
-                    <p className="font-bold text-lg">{rate} <span className="text-xs font-normal">breaths/min</span></p>
+                <div className="p-2 rounded-lg bg-accent/10 border border-accent/30 ring-1 ring-accent/20">
+                    <p className="text-[10px] text-muted-foreground uppercase font-mono mb-1">Rate</p>
+                    <p className="font-bold text-xl font-mono text-accent">{rate} <span className="text-[10px]">BPM</span></p>
                 </div>
             </div>
-            <Separator />
-            <div className="space-y-4">
-                <CardTitle className="flex items-center justify-between text-lg">
-                    <span>Respiration Analysis</span>
-                    <Badge variant={rateStatus.variant}>{rateStatus.text}</Badge>
-                </CardTitle>
-                <CardDescription>
-                    Your rate of {rate} breaths/min is considered {rateStatus.text?.toLowerCase()} for a(n) {status} (Normal: {low}-{high} breaths/min).
-                </CardDescription>
-                <div className="h-40 w-full">
+
+            <div className="space-y-4 relative">
+                <div className="absolute -left-2 top-0 bottom-0 w-[1px] bg-accent/20" />
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-accent" />
+                        <h2 className="text-sm font-mono uppercase tracking-wider text-muted-foreground">Respiration Waveform</h2>
+                    </div>
+                    <Badge variant={rateStatus.variant} className="font-mono text-[10px] uppercase tracking-tighter">
+                        {rateStatus.text} Detected
+                    </Badge>
+                </div>
+                
+                <div className="h-48 w-full bg-accent/5 rounded-lg border border-accent/10 p-2 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--accent),0.05),transparent)] pointer-events-none" />
                     <ResponsiveContainer>
-                        <LineChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{fill: 'hsl(var(--muted-foreground))'}} />
-                            <YAxis allowDecimals={false} domain={[0, Math.max(rate, high) + 5]} tick={{fill: 'hsl(var(--muted-foreground))'}}/>
-                            <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}/>
-                            <ReferenceLine y={low} label={{ value: 'Normal Low', position: 'insideTopLeft', fill: 'hsl(var(--muted-foreground))' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
-                            <ReferenceLine y={high} label={{ value: 'Normal High', position: 'insideTopLeft', fill: 'hsl(var(--muted-foreground))' }} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
+                        <LineChart data={chartData} margin={{ top: 10, right: 30, left: -20, bottom: 0 }}>
+                            <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="rgba(var(--accent),0.1)" />
+                            <XAxis dataKey="name" hide />
+                            <YAxis 
+                                allowDecimals={false} 
+                                domain={[0, Math.max(rate, high) + 5]} 
+                                tick={{fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontFamily: 'monospace'}}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <Tooltip 
+                                cursor={{ stroke: 'hsl(var(--accent))', strokeWidth: 1 }}
+                                contentStyle={{
+                                    backgroundColor: 'rgba(0,0,0,0.8)', 
+                                    border: '1px solid hsl(var(--accent)/0.3)',
+                                    borderRadius: '4px',
+                                    fontSize: '10px',
+                                    fontFamily: 'monospace',
+                                    color: 'hsl(var(--accent))'
+                                }}
+                                itemStyle={{color: 'hsl(var(--accent))'}}
+                            />
+                            <ReferenceLine y={low} stroke="hsl(var(--accent)/0.2)" strokeDasharray="3 3" />
+                            <ReferenceLine y={high} stroke="hsl(var(--accent)/0.2)" strokeDasharray="3 3" />
                             <Line 
                                 type="monotone" 
                                 dataKey="value" 
-                                stroke={chartColor}
+                                stroke="hsl(var(--accent))"
                                 strokeWidth={2}
-                                strokeDasharray="5 5"
-                                dot={{ r: 0 }}
-                                activeDot={{ r: 0 }}
+                                strokeDasharray="4 4"
+                                dot={false}
+                                activeDot={{ r: 4, fill: 'hsl(var(--accent))', stroke: 'white', strokeWidth: 2 }}
+                                animationDuration={2000}
                             />
                             <Line
                                 type="monotone"
                                 dataKey="value"
                                 stroke="transparent"
                                 activeDot={false}
-                                dot={(props) => {
-                                    if (props.index === 1) {
-                                        return <circle {...props} r={8} fill={chartColor} />;
+                                dot={(props: any) => {
+                                    const { key, cx, cy, index } = props;
+                                    if (index === 1) {
+                                        return (
+                                            <g key={key}>
+                                                <circle cx={cx} cy={cy} r={8} fill="hsl(var(--accent))" fillOpacity={0.2}>
+                                                    <animate attributeName="r" from="8" to="14" dur="1.5s" begin="0s" repeatCount="indefinite" />
+                                                    <animate attributeName="opacity" from="0.4" to="0" dur="1.5s" begin="0s" repeatCount="indefinite" />
+                                                </circle>
+                                                <circle cx={cx} cy={cy} r={5} fill={chartColor} stroke="white" strokeWidth={2} />
+                                            </g>
+                                        );
                                     }
                                     return null;
                                 }}
@@ -115,31 +150,44 @@ export default function ResultsDisplay({ result, patientData, onReset, onSave }:
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
-                <p className="text-sm bg-muted/50 p-4 rounded-md prose prose-sm dark:prose-invert max-w-none">{result.analysis.analysis}</p>
+                
+                <div className="p-4 rounded-md bg-muted/20 border border-accent/5">
+                    <p className="text-xs font-mono text-muted-foreground mb-2 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+                        AI LOGS: ANALYSIS_COMPLETED
+                    </p>
+                    <p className="text-sm font-body leading-relaxed">{result.analysis.analysis}</p>
+                </div>
             </div>
             
-            <Separator />
+            <Separator className="bg-accent/10" />
 
-            <div className="space-y-4">
-                 <CardTitle className="flex items-center gap-2 text-lg">
-                    <Lightbulb className="text-foreground" />
-                    <span>Recommendations & Advice</span>
-                </CardTitle>
-                 <div className="space-y-3 prose prose-sm dark:prose-invert max-w-none text-muted-foreground">
-                    <div>
-                        <h3 className="font-semibold mb-1 text-sm text-foreground">Personalized Recommendations</h3>
-                        <p>{result.analysis.recommendations}</p>
+            <div className="grid sm:grid-cols-2 gap-6">
+                 <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-accent" />
+                        <h3 className="text-xs font-mono uppercase tracking-widest text-accent">Directives</h3>
                     </div>
-                    <div>
-                        <h3 className="font-semibold mb-1 text-sm text-foreground">Wellbeing Tips</h3>
-                        <p>{result.advice.advice}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{result.analysis.recommendations}</p>
+                 </div>
+                 <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                        <Lightbulb className="w-4 h-4 text-accent" />
+                        <h3 className="text-xs font-mono uppercase tracking-widest text-accent">Optimizations</h3>
                     </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{result.advice.advice}</p>
                  </div>
             </div>
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row gap-2 bg-muted/30 p-4 border-t">
-            <Button onClick={onSave} variant="secondary" className="w-full"><Save/>Save Session</Button>
-            <Button onClick={onReset} className="w-full"><Repeat/>New Session</Button>
+        <CardFooter className="flex flex-col sm:flex-row gap-3 bg-muted/10 p-6 border-t border-accent/10">
+            <Button onClick={onSave} variant="outline" className="w-full border-accent/20 hover:bg-accent/5 hover:text-accent font-mono text-xs uppercase tracking-tighter">
+                <Save className="w-4 h-4 mr-2" />
+                Commit to Memory
+            </Button>
+            <Button onClick={onReset} className="w-full bg-accent hover:bg-accent/80 text-accent-foreground font-mono text-xs uppercase tracking-tighter">
+                <Repeat className="w-4 h-4 mr-2" />
+                Initialize New Scan
+            </Button>
         </CardFooter>
       </Card>
     </div>
