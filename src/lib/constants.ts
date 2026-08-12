@@ -1,4 +1,4 @@
-export const GENDER_OPTIONS = ["Male", "Female", "Other"];
+export const GENDER_OPTIONS = ["Male", "Female"];
 
 export const ACTIVITY_LEVELS = [
   { id: "sedentary", label: "Sedentary (little to no exercise)" },

@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Spirox - Respiration Monitor',
-  description: 'Monitor your respiration rate and get smart wellbeing advice with Spirox.',
+  title: 'Spirex - Respiration Monitor',
+  description: 'Monitor your respiration rate and get smart wellbeing advice with Spirex.',
 };
 
 export default function RootLayout({

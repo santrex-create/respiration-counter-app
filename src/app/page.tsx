@@ -122,9 +122,9 @@ export default function Home() {
       <div className="w-full max-w-md mx-auto relative z-10">
         <header className="text-center mb-12">
           {step === 'info' ? (
-            <div className="flex flex-col items-center justify-center gap-1 group">
+            <div className="flex flex-row items-center justify-center gap-3 group">
               <div className="relative">
-                <Activity className="w-12 h-12 text-accent animate-pulse" />
+                <Activity className="w-10 h-10 text-accent animate-pulse" />
               </div>
               <h1 className="text-2xl font-mono font-bold text-foreground tracking-tighter uppercase">
                 Respiration <span className="text-accent">Counter</span>
