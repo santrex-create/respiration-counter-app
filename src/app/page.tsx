@@ -32,7 +32,7 @@ const createInitialSession = (daysAgo: number, age: number, rr: number): SavedSe
   },
   analysisResult: {
     analysis: {
-      analysis: `Respiration rate of ${rr} BPM is optimal for age group ${age}.`,
+      analysis: `Neural analysis indicates respiration rate of ${rr} BPM is optimal for age group ${age}.`,
       recommendations: "Maintain current physiological equilibrium.",
       routine: "1. 20m morning walk, 2. Optimized hydration, 3. Breath control.",
     },
@@ -50,7 +50,7 @@ export default function Home() {
   const [savedSessions, setSavedSessions] = useState<SavedSession[]>([]);
 
   useEffect(() => {
-    // Initialize with professional baseline data
+    // Initialize with professional baseline records
     setSavedSessions([
       createInitialSession(2, 28, 16),
       createInitialSession(5, 28, 14),
@@ -91,8 +91,8 @@ export default function Home() {
       } else {
         toast({
           variant: "destructive",
-          title: "System Error",
-          description: result.error || "Uplink failed. Please retry connection.",
+          title: "System Latency",
+          description: result.error || "Uplink failed. Please retry neural connection.",
         });
       }
     });
@@ -108,30 +108,30 @@ export default function Home() {
       };
       setSavedSessions((prev) => [newSession, ...prev]);
       toast({
-        title: "Protocol Committed",
-        description: "Diagnostic session successfully archived.",
+        title: "Telemetry Committed",
+        description: "Diagnostic session successfully archived to core memory.",
       });
     }
   }, [formData, analysisResult, toast]);
 
   const renderStep = () => {
     const variants = {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      exit: { opacity: 0, y: -20 }
+      initial: { opacity: 0, scale: 0.98 },
+      animate: { opacity: 1, scale: 1 },
+      exit: { opacity: 0, scale: 0.98 }
     };
 
     switch (step) {
       case "info":
-        return <motion.div key="info" {...variants}><PatientInfoForm onNext={handleNext} defaultValues={formData} /></motion.div>;
+        return <motion.div key="info" {...variants} transition={{ duration: 0.2 }}><PatientInfoForm onNext={handleNext} defaultValues={formData} /></motion.div>;
       case "conditions":
-        return <motion.div key="conditions" {...variants}><ConditionsChecklist onNext={handleNext} onBack={handleBack} defaultValues={formData} /></motion.div>;
+        return <motion.div key="conditions" {...variants} transition={{ duration: 0.2 }}><ConditionsChecklist onNext={handleNext} onBack={handleBack} defaultValues={formData} /></motion.div>;
       case "rate":
-        return <motion.div key="rate" {...variants}><RateInput onAnalyze={handleAnalysis} onBack={handleBack} defaultValues={formData} isPending={isPending} /></motion.div>;
+        return <motion.div key="rate" {...variants} transition={{ duration: 0.2 }}><RateInput onAnalyze={handleAnalysis} onBack={handleBack} defaultValues={formData} isPending={isPending} /></motion.div>;
       case "results":
-        return <motion.div key="results" {...variants}><ResultsDisplay result={analysisResult!} patientData={formData as PatientData} onReset={() => setStep("info")} onSave={handleSaveSession} /></motion.div>;
+        return <motion.div key="results" {...variants} transition={{ duration: 0.2 }}><ResultsDisplay result={analysisResult!} patientData={formData as PatientData} onReset={() => setStep("info")} onSave={handleSaveSession} /></motion.div>;
       case "past-sessions":
-        return <motion.div key="past-sessions" {...variants}><PastSessions sessions={savedSessions} onBack={() => setStep("info")} /></motion.div>;
+        return <motion.div key="past-sessions" {...variants} transition={{ duration: 0.2 }}><PastSessions sessions={savedSessions} onBack={() => setStep("info")} /></motion.div>;
       default:
         return null;
     }
@@ -139,8 +139,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/tech/1920/1080')] opacity-[0.05] grayscale mix-blend-overlay pointer-events-none" />
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-20" />
+      <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/tech/1920/1080')] opacity-[0.03] grayscale mix-blend-overlay pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-30" />
       
       <div className="w-full max-w-xl z-10">
         <header className="mb-12 text-center">
@@ -165,7 +165,7 @@ export default function Home() {
             <Button 
               variant="outline" 
               onClick={() => setStep("past-sessions")}
-              className="border-accent/30 text-accent hover:bg-accent/10 font-mono text-xs uppercase tracking-widest"
+              className="border-accent/20 text-accent hover:bg-accent/5 font-mono text-[10px] uppercase tracking-[0.2em]"
             >
               Access System Archives
             </Button>

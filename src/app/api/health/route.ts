@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  return NextResponse.json({ status: 'healthy', timestamp: new Date().toISOString() }, { status: 200 });
+  return NextResponse.json(
+    { 
+      status: 'active', 
+      system: 'Spirex v2.5',
+      timestamp: new Date().toISOString() 
+    }, 
+    { status: 200 }
+  );
 }
