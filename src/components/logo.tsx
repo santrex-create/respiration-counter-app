@@ -8,7 +8,7 @@ const Logo = () => {
         <div className="absolute inset-0 border border-accent/20 rounded-full animate-ping [animation-duration:3s]" />
       </div>
       <h1 className="text-2xl font-mono font-bold text-foreground tracking-tighter uppercase">
-        Vital<span className="text-accent">Scan</span> <span className="text-[10px] text-muted-foreground opacity-50">v2.5</span>
+        Spirox <span className="text-[10px] text-muted-foreground opacity-50">v2.5</span>
       </h1>
     </div>
   );

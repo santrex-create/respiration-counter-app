@@ -14,6 +14,7 @@ import Logo from "@/components/logo";
 import PastSessions from "@/components/steps/past-sessions";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
+import { Activity } from "lucide-react";
 
 type Step = "info" | "conditions" | "rate" | "results" | "past-sessions";
 
@@ -120,20 +121,31 @@ export default function Home() {
       <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/tech/1920/1080')] opacity-[0.03] grayscale pointer-events-none" />
       <div className="w-full max-w-md mx-auto relative z-10">
         <header className="text-center mb-12">
-          <Logo />
+          {step === 'info' ? (
+            <div className="flex flex-col items-center justify-center gap-1 group">
+              <div className="relative">
+                <Activity className="w-12 h-12 text-accent animate-pulse" />
+              </div>
+              <h1 className="text-2xl font-mono font-bold text-foreground tracking-tighter uppercase">
+                Respiration <span className="text-accent">Counter</span>
+              </h1>
+            </div>
+          ) : (
+            <Logo />
+          )}
         </header>
         
+        <AnimatePresence mode="wait">
+          {currentStepView}
+        </AnimatePresence>
+
         {step === 'info' && savedSessions.length > 0 && (
-          <div className="text-center mb-6">
+          <div className="text-center mt-8">
             <Button variant="outline" onClick={handleViewPastSessions} className="border-accent/30 text-accent hover:bg-accent/10 font-mono text-[10px] uppercase">
               Access Archives
             </Button>
           </div>
         )}
-
-        <AnimatePresence mode="wait">
-          {currentStepView}
-        </AnimatePresence>
       </div>
     </main>
   );

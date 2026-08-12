@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -123,10 +122,16 @@ function RateInput({ onAnalyze, onBack, defaultValues, isPending }: RateInputPro
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
                   className="space-y-4 text-center flex flex-col items-center"
                 >
-                  <MemoizedCircularProgress progress={(timer / 60) * 100}>
-                      <span className="text-3xl font-bold">{timer}</span>
-                      <span className="text-sm text-muted-foreground">seconds</span>
-                  </MemoizedCircularProgress>
+                  <motion.div 
+                    whileTap={{ scale: 0.95 }}
+                    className="cursor-pointer"
+                    onClick={handleTapCount}
+                  >
+                    <MemoizedCircularProgress progress={(timer / 60) * 100}>
+                        <span className="text-3xl font-bold">{timer}</span>
+                        <span className="text-sm text-muted-foreground">seconds</span>
+                    </MemoizedCircularProgress>
+                  </motion.div>
                   <motion.div
                     whileTap={{ scale: 0.95 }}
                     className="w-full"
