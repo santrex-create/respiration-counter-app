@@ -22,11 +22,20 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# env files (CRITICAL: Ignores plain .env too)
+.env
+.env*
 
-# vercel
+# vercel & app hosting
 .vercel
+apphosting.yaml
+
+# IDE & Firebase Studio workspace artifacts
+.agents/
+.idx/
+.vscode/
+.modified
+studio.json
 
 # typescript
 *.tsbuildinfo
