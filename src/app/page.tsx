@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useTransition, useMemo, useEffect } from "react";
+import { useState, useCallback, useTransition, useEffect } from "react";
 import type { PatientData, SavedSession, AnalysisResult } from "@/lib/types";
 import { getAnalysis } from "@/lib/actions";
 import { v4 as uuidv4 } from "uuid";
@@ -18,7 +18,7 @@ import { Activity } from "lucide-react";
 
 type Step = "info" | "conditions" | "rate" | "results" | "past-sessions";
 
-const createMockSession = (daysAgo: number, age: number, rr: number): SavedSession => ({
+const createInitialSession = (daysAgo: number, age: number, rr: number): SavedSession => ({
   id: uuidv4(),
   patientData: {
     age,
@@ -33,11 +33,11 @@ const createMockSession = (daysAgo: number, age: number, rr: number): SavedSessi
   analysisResult: {
     analysis: {
       analysis: `Respiration rate of ${rr} BPM is optimal for age group ${age}.`,
-      recommendations: "Continue current lifestyle balance.",
-      routine: "1. 20m morning walk, 2. Hydration intervals, 3. Breath work.",
+      recommendations: "Maintain current physiological equilibrium.",
+      routine: "1. 20m morning walk, 2. Optimized hydration, 3. Breath control.",
     },
     advice: {
-      advice: "Stable respiratory rhythm detected.",
+      advice: "Stable physiological rhythm detected.",
     },
   },
   savedAt: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000),
@@ -50,10 +50,11 @@ export default function Home() {
   const [savedSessions, setSavedSessions] = useState<SavedSession[]>([]);
 
   useEffect(() => {
+    // Initialize with professional baseline data
     setSavedSessions([
-      createMockSession(2, 28, 16),
-      createMockSession(5, 28, 14),
-      createMockSession(10, 28, 18),
+      createInitialSession(2, 28, 16),
+      createInitialSession(5, 28, 14),
+      createInitialSession(10, 28, 18),
     ]);
   }, []);
 
@@ -91,7 +92,7 @@ export default function Home() {
         toast({
           variant: "destructive",
           title: "System Error",
-          description: result.error || "Neural link failed. Try again.",
+          description: result.error || "Uplink failed. Please retry connection.",
         });
       }
     });
@@ -107,8 +108,8 @@ export default function Home() {
       };
       setSavedSessions((prev) => [newSession, ...prev]);
       toast({
-        title: "Session Archived",
-        description: "Data successfully committed to memory.",
+        title: "Protocol Committed",
+        description: "Diagnostic session successfully archived.",
       });
     }
   }, [formData, analysisResult, toast]);
@@ -166,7 +167,7 @@ export default function Home() {
               onClick={() => setStep("past-sessions")}
               className="border-accent/30 text-accent hover:bg-accent/10 font-mono text-xs uppercase tracking-widest"
             >
-              Access Archives
+              Access System Archives
             </Button>
           </div>
         )}
