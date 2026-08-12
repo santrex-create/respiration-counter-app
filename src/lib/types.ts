@@ -9,7 +9,7 @@ import {
 
 export const PatientInfoSchema = z.object({
   age: z.coerce.number().min(0, "Age must be a positive number.").max(120),
-  gender: z.enum(GENDER_OPTIONS as [string, ...string[]]),
+  gender: z.enum(["Male", "Female"] as [string, ...string[]]),
   weight: z.coerce.number().min(20, "baby_choose_valid_parameter 😘").max(500),
   pastDisease: z.string().optional(),
 });
